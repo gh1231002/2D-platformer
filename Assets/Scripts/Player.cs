@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float MoveSpeed = 5;
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float JumpForce = 5;
+    [SerializeField] private Transform layerDynamic;
     BoxCollider2D boxCollider2D;
     private Camera maincam;
     private Animator anim;
@@ -35,7 +36,15 @@ public class Player : MonoBehaviour
     [SerializeField] private float dashTimer = 0.3f;
     private bool dash = false;
     private float dashTime = 0.0f;
-    
+
+    [Header("ÃÑ¾Ë¼¼ÆÃ")]
+    private Transform trsShootpos;
+    private float timer = 0.01f;
+    [SerializeField] private float BulletDamage = 0.0f;
+    [SerializeField, Range(0.1f, 1.0f)] private float TimeShoot = 0.5f;
+
+    [Header("ÇÁ¸®ÆÕ")]
+    [SerializeField] GameObject objBullet;
     private void OnDrawGizmos()
     {
         if (boxCollider2D != null)
@@ -50,6 +59,7 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        trsShootpos = transform.Find("ShotPos");
     }
     void Start()
     {
@@ -67,6 +77,7 @@ public class Player : MonoBehaviour
         checkGravity();
         checkDoStepWallTimer();
         checkDash();
+        checkShoot();
     }
 
     private void moving()
@@ -177,7 +188,7 @@ public class Player : MonoBehaviour
 
     private void checkDash()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl) && dash == false)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dash == false)
         {
             dash = true;
             verticalVelocity = 0f;
@@ -199,6 +210,31 @@ public class Player : MonoBehaviour
                 dash = false;
             }
         }
+    }
+
+    private void checkShoot()
+    {
+        if(Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            shootBullet();
+        }
+    }
+
+    private void shootBullet()
+    {
+        createBullet(trsShootpos.position,Vector3.zero);
+    }
+
+    private void createBullet(Vector3 _pos, Vector3 _rot)
+    {
+        GameObject obj = Instantiate(objBullet, _pos, Quaternion.Euler(_rot), layerDynamic);
+        Bullet objsc = obj.GetComponent<Bullet>();
+        bool isRight = true;
+        if (transform.localScale.x == -1)
+        {
+            isRight = false;
+        }
+        objsc.SetDamege(true, BulletDamage, isRight);
     }
 
     public void TriggerEnter(hitType _Type, Collider2D _collision)
