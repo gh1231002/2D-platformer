@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] private float JumpForce = 5;
     [SerializeField] private Transform layerDynamic;
+    [SerializeField] private Sprite sprHurt;
+    private SpriteRenderer sr;
+    private Sprite sprDefault;
     BoxCollider2D boxCollider2D;
     private Camera maincam;
     private Animator anim;
@@ -36,6 +39,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float dashTimer = 0.3f;
     private bool dash = false;
     private float dashTime = 0.0f;
+    private TrailRenderer dashEffect;
 
     [Header("ÃÑ¾Ë¼¼ÆÃ")]
     private Transform trsShootpos;
@@ -59,7 +63,10 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        dashEffect = GetComponent<TrailRenderer>();
+        sr = GetComponent<SpriteRenderer>();
         trsShootpos = transform.Find("ShotPos");
+        dashEffect.enabled = false;
     }
     void Start()
     {
@@ -126,6 +133,7 @@ public class Player : MonoBehaviour
 
     private void Jumping()
     {
+        if (dash == true) return;
        if(isGround == false)
         {
             if (Input.GetKeyDown(KeyCode.Space) && wallStep == true && moveDir.x != 0)
@@ -188,6 +196,7 @@ public class Player : MonoBehaviour
 
     private void checkDash()
     {
+        if (isGround == false) return;
         if (Input.GetKeyDown(KeyCode.LeftShift) && dash == false)
         {
             dash = true;
@@ -195,10 +204,12 @@ public class Player : MonoBehaviour
             if(transform.localScale.x == 1)
             {
                 rigid.velocity = new Vector2(10.0f, 0f);
+                dashEffect.enabled = true;
             }
             else if(transform.localScale.x == -1)
             {
                 rigid.velocity = new Vector2(-10.0f, 0f);
+                dashEffect.enabled = true;
             }
         }
         else if(dash == true)
@@ -207,6 +218,8 @@ public class Player : MonoBehaviour
             if(dashTime >= dashTimer)
             {
                 dashTime = 0.0f;
+                dashEffect.enabled = false;
+                dashEffect.Clear();
                 dash = false;
             }
         }
