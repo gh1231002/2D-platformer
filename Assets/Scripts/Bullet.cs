@@ -15,6 +15,16 @@ public class Bullet : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(PlayerBullet == true && collision.gameObject.tag=="Enemy")
+        {
+            Enemy enemySc = collision.gameObject.GetComponent<Enemy>();
+            enemySc.Hit(BulletDamage);
+            Destroy(gameObject );
+        }
+    }
     void Update()
     {
         int diretion = 1;

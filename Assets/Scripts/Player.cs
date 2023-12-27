@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float JumpForce = 5;
     [SerializeField] private Transform layerDynamic;
     [SerializeField] private Sprite sprHurt;
+    [SerializeField] private float PlayerMaxHp = 3;
+    [SerializeField] private float PlayerCurHp;
     private SpriteRenderer sr;
     private Sprite sprDefault;
     BoxCollider2D boxCollider2D;
@@ -58,6 +60,27 @@ public class Player : MonoBehaviour
             Gizmos.DrawWireCube(pos, boxCollider2D.bounds.size);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (dash == true) return;
+        if(collision.gameObject.tag == "Enemy")
+        {
+            Hit(1.0f);
+        }
+    }
+
+    public void Hit(float _damage)
+    {
+        PlayerCurHp -= _damage;
+        if (PlayerCurHp <= 0)
+        {
+            Destroy(gameObject);
+            dashEffect.enabled = false;
+        }
+    }
+
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -65,8 +88,10 @@ public class Player : MonoBehaviour
         boxCollider2D = GetComponent<BoxCollider2D>();
         dashEffect = GetComponent<TrailRenderer>();
         sr = GetComponent<SpriteRenderer>();
+        sprDefault = sr.sprite;
         trsShootpos = transform.Find("ShotPos");
         dashEffect.enabled = false;
+        PlayerCurHp = PlayerMaxHp;
     }
     void Start()
     {
@@ -157,8 +182,8 @@ public class Player : MonoBehaviour
             dir.x *= -1;
             rigid.velocity = dir;
             verticalVelocity = JumpForce;
-            doWallStep = false;
             doWallStepTimer = true;
+            doWallStep = false;
         }
         if (isGround == false)
         {
@@ -249,6 +274,8 @@ public class Player : MonoBehaviour
         }
         objsc.SetDamege(true, BulletDamage, isRight);
     }
+
+
 
     public void TriggerEnter(hitType _Type, Collider2D _collision)
     {
