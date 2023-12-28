@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     [SerializeField]private bool isGround = false;
     private float verticalVelocity;
     private bool isJump = false;
+    PlayerHp playerHp;
 
     [Header("º®Á¡ÇÁ")]
     private bool wallStep = false;
@@ -73,10 +74,11 @@ public class Player : MonoBehaviour
     public void Hit(float _damage)
     {
         PlayerCurHp -= _damage;
+        playerHp.SetPlayerHp(PlayerCurHp);
         if (PlayerCurHp <= 0)
         {
-            Destroy(gameObject);
             dashEffect.enabled = false;
+            Destroy(gameObject);
         }
     }
 
@@ -236,6 +238,7 @@ public class Player : MonoBehaviour
                 rigid.velocity = new Vector2(-10.0f, 0f);
                 dashEffect.enabled = true;
             }
+            gameObject.layer = LayerMask.NameToLayer("Dash");
         }
         else if(dash == true)
         {
@@ -246,6 +249,7 @@ public class Player : MonoBehaviour
                 dashEffect.enabled = false;
                 dashEffect.Clear();
                 dash = false;
+                gameObject.layer = LayerMask.NameToLayer("Player");
             }
         }
     }
@@ -275,8 +279,11 @@ public class Player : MonoBehaviour
         objsc.SetDamege(true, BulletDamage, isRight);
     }
 
-
-
+    public void SetPlayerHp(PlayerHp _value)
+    {
+        playerHp = _value;
+        playerHp.SetPlayerHp(PlayerCurHp);
+    }
     public void TriggerEnter(hitType _Type, Collider2D _collision)
     {
         if(_Type == hitType.WallCheck && _collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
