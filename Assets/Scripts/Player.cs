@@ -67,7 +67,8 @@ public class Player : MonoBehaviour
         if (dash == true) return;
         if(collision.gameObject.tag == "Enemy")
         {
-            Hit(1.0f);
+            Enemy obj = collision.gameObject.GetComponent<Enemy>();
+            obj.Hit(1,true);
         }
     }
 

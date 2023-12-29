@@ -195,3 +195,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BulletSpeed: 10
   TimeDestroy: 0.5
+  objHit: {fileID: 7840591547574622477, guid: 8fcc2749f58168c4f9095d86c60f3457, type: 3}
