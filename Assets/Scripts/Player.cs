@@ -76,10 +76,10 @@ public class Player : MonoBehaviour
     {
         PlayerCurHp -= _damage;
         playerHp.SetPlayerHp(PlayerCurHp);
-        if (PlayerCurHp <= 0)
+        if (PlayerCurHp == 0)
         {
-            dashEffect.enabled = false;
             Destroy(gameObject);
+            dashEffect.enabled = false;
         }
     }
 

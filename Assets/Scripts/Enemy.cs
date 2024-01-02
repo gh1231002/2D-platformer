@@ -21,7 +21,14 @@ public class Enemy : MonoBehaviour
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
     [SerializeField] private int bossPattern1Count;
+    [SerializeField] private float bossPattern1Reload;
+    [SerializeField] GameObject pattern1Bullet;
     [SerializeField] private int bossPattern2Count;
+    [SerializeField] private float bossPattern2Reload;
+    [SerializeField] GameObject pattern2Bullet;
+    [SerializeField] private int bossPattern3Count;
+    [SerializeField] private float bossPattern3Reload;
+    [SerializeField] GameObject pattern3Bullet;
     private int bossPattern = 1; //현재패턴
     private bool patternChange = false; //패턴을 바꿔야하는지
     private int patternConunt = 0; //몇번 패턴을 했는지
@@ -44,17 +51,18 @@ public class Enemy : MonoBehaviour
     private void moving()
     {
         if(isBoss == false)
-        { 
+        {
             rigid.velocity = new Vector2(moveSpeed, rigid.velocity.y);
         }
-        else
+       else if(isBoss == true)
         {
-            bossStartMoving();
+            
         }
     }
 
     private void checnkBossPattern()
     {
+        if (isBoss == false) return;
         patternTimer += Time.deltaTime;
         if(patternChange == true)
         {
@@ -65,20 +73,93 @@ public class Enemy : MonoBehaviour
             }
             return;
         }
+        
+        switch(bossPattern)
+        {
+            case 1:
+                {
+                    if(patternTimer >= bossPattern1Reload)
+                    {
+                        patternTimer = 0.0f;
+                        shootStraight();
+                        if (patternConunt >= bossPattern1Count)
+                        {
+                            bossPattern++;
+                            patternChange = true;
+                            patternConunt = 0;
+                        }
+                    }
+                }
+                break;
+            case 2:
+                {
+                    if (patternTimer >= bossPattern2Reload)
+                    {
+                        patternTimer = 0.0f;
+                        airShotgun();
+                        if (patternConunt >= bossPattern2Count)
+                        {
+                            bossPattern++;
+                            patternChange = true;
+                            patternConunt = 0;
+                        }
+                    }
+                }
+                break;
+            case 3:
+                {
+                    if (patternTimer >= bossPattern3Reload)
+                    {
+                        patternTimer = 0.0f;
+                        airGatling();
+                        if (patternConunt >= bossPattern3Count)
+                        {
+                            bossPattern++;
+                            patternChange = true;
+                            patternConunt = 0;
+                        }
+                    }
+                }
+                break;
+        }
     }
 
-    private void bossStartMoving()
+    private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
     {
-        rigid.velocity = new Vector2(-moveSpeed, rigid.velocity.y);
+        GameObject obj = Instantiate(_obj,_pos,Quaternion.Euler(_rot),trsLayer);
+        Bullet objSc = obj.GetComponent<Bullet>();
+        bool isRight = false;
+        if (transform.localScale.x == -1)
+        {
+            isRight = true;
+        }
+        objSc.SetDamege(false,1,isRight,_speed);
     }
+    private void shootStraight()
+    {
+        creatBullet(pattern1Bullet, transform.position, Vector3.zero, 5);
+        creatBullet(pattern1Bullet, transform.position + new Vector3(0,1,0), Vector3.zero, 5);
+        creatBullet(pattern1Bullet, transform.position + new Vector3(0,2,0), Vector3.zero, 5);
+        patternConunt++;
+    }
+    private void airShotgun()
+    {
+
+    }
+    private void airGatling()
+    {
+
+    }
+
+
 
     private void FixedUpdate()
     {
-        if (trigger.IsTouchingLayers(layer)==false)
+        if (trigger.IsTouchingLayers(layer)==false && isBoss == false)
         {
             turn();
         }
-        if(trigger.IsTouchingLayers(layerEnemy)==true)
+        if(trigger.IsTouchingLayers(layerEnemy)==true && isBoss == false)
         {
             turn();
         }

@@ -31,7 +31,14 @@ public class Bullet : MonoBehaviour
         {
             Enemy enemySc = collision.gameObject.GetComponent<Enemy>();
             enemySc.Hit(BulletDamage);
-            Destroy(gameObject );
+            Destroy(gameObject);
+            Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
+        }
+        else if(PlayerBullet == false && collision.gameObject.tag == "Player")
+        {
+            Player playerSc = collision.gameObject.GetComponent<Player>();
+            playerSc.Hit(BulletDamage);
+            Destroy(gameObject);
             Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -59,10 +66,16 @@ public class Bullet : MonoBehaviour
             BulletSpeed = _speed;
         }
         isRight = _isRight;
-        if (isRight == false)
+        if (isRight == false && PlayerBullet == true)
         {
             Vector3 scale = transform.localScale;
             scale.x = -1;
+            transform.localScale = scale;
+        }
+        else if (isRight == false && PlayerBullet == false)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
             transform.localScale = scale;
         }
     }

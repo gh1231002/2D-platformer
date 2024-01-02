@@ -1158,7 +1158,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &427136397
 Animator:
   serializedVersion: 5
@@ -15228,7 +15235,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &676416679
 Animator:
   serializedVersion: 5
@@ -15530,7 +15544,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &709204933
 Animator:
   serializedVersion: 5
@@ -15738,7 +15759,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &795833802
 Animator:
   serializedVersion: 5
@@ -16100,7 +16128,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &873959897
 Animator:
   serializedVersion: 5
@@ -19172,7 +19207,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &993431663
 Animator:
   serializedVersion: 5
@@ -19780,7 +19822,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &1151636977
 Animator:
   serializedVersion: 5
@@ -19988,7 +20037,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &1311935232
 Animator:
   serializedVersion: 5
@@ -20256,7 +20312,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355394399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 81.982185, y: 6.255226, z: 0}
+  m_LocalPosition: {x: 82.4, y: 6.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20284,12 +20340,19 @@ MonoBehaviour:
   layerEnemy:
     serializedVersion: 2
     m_Bits: 0
-  moveSpeed: 3
+  moveSpeed: 5
   MaxHp: 100
   trsLayer: {fileID: 0}
   isBoss: 1
-  bossPattern1Count: 0
+  bossPattern1Count: 3
+  bossPattern1Reload: 1
+  pattern1Bullet: {fileID: 5593173806770613371, guid: 1bdb02b7442dcf74b83d8eca5f1d6dbf, type: 3}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 7980344111859869696, guid: 367b2d0609e1d074b9e62bb6cd073280, type: 3}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 1385340667596194150, guid: 2e728df0984fbbb4f991e77b2da14f32, type: 3}
 --- !u!1 &1473585646
 GameObject:
   m_ObjectHideFlags: 0
@@ -20581,7 +20644,14 @@ MonoBehaviour:
   trsLayer: {fileID: 2120735772}
   isBoss: 0
   bossPattern1Count: 0
+  bossPattern1Reload: 0
+  pattern1Bullet: {fileID: 0}
   bossPattern2Count: 0
+  bossPattern2Reload: 0
+  pattern2Bullet: {fileID: 0}
+  bossPattern3Count: 0
+  bossPattern3Reload: 0
+  pattern3Bullet: {fileID: 0}
 --- !u!95 &1918387923
 Animator:
   serializedVersion: 5
