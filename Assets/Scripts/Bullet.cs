@@ -34,13 +34,13 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
             Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
         }
-        else if(PlayerBullet == false && collision.gameObject.tag == "Player")
-        {
-            Player playerSc = collision.gameObject.GetComponent<Player>();
-            playerSc.Hit(BulletDamage);
-            Destroy(gameObject);
-            Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
-        }
+        //else if(PlayerBullet == false && collision.gameObject.tag == "Player")
+        //{
+        //    Player playerSc = collision.gameObject.GetComponent<Player>();
+        //    playerSc.Hit(BulletDamage);
+        //    Destroy(gameObject);
+        //    Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
+        //}
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             Destroy(gameObject);
@@ -72,11 +72,11 @@ public class Bullet : MonoBehaviour
             scale.x = -1;
             transform.localScale = scale;
         }
-        else if (isRight == false && PlayerBullet == false)
-        {
-            Vector3 scale = transform.localScale;
-            scale.x = 1;
-            transform.localScale = scale;
-        }
+        //else if (isRight == false && PlayerBullet == false)
+        //{
+        //    Vector3 scale = transform.localScale;
+        //    scale.x = 1;
+        //    transform.localScale = scale;
+        //}
     }
 }

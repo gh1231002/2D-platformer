@@ -17,34 +17,35 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer sr;
     private float CurHp;
     Rigidbody2D rigid;
+    private Animator anim;
 
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
-    [SerializeField] private int bossPattern1Count;
-    [SerializeField] private float bossPattern1Reload;
-    [SerializeField] GameObject pattern1Bullet;
-    [SerializeField] private int bossPattern2Count;
-    [SerializeField] private float bossPattern2Reload;
-    [SerializeField] GameObject pattern2Bullet;
-    [SerializeField] private int bossPattern3Count;
-    [SerializeField] private float bossPattern3Reload;
-    [SerializeField] GameObject pattern3Bullet;
-    private int bossPattern = 1; //현재패턴
+    private bool pattern1 = false;
+    private float pattern1Reload =1f;
+    private int pattern1Count = 1;
+
+    private bool bossMove = false;
+    private float moveTime = 0.0f;
+    [SerializeField]private int bossPattern = 1; //현재패턴
     private bool patternChange = false; //패턴을 바꿔야하는지
     private int patternConunt = 0; //몇번 패턴을 했는지
     private float patternTimer = 0.0f; //패턴 변경 시간
+    
 
     private void Awake()
     {
         CurHp = MaxHp;
         rigid = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
         sprdefault = sr.sprite;
     }
     
     void Update()
     {
         moving();
+        bossAnimation();
         checnkBossPattern();
     }
 
@@ -56,15 +57,30 @@ public class Enemy : MonoBehaviour
         }
        else if(isBoss == true)
         {
+            bossMove = true;
+            rigid.velocity = new Vector2(-moveSpeed, rigid.velocity.y);
+            moveTime += Time.deltaTime;
+            if(moveTime >= 6.0f)
+            {
+                turn();
+                moveTime = 0.0f;
+            }
+            bossMove = false;
             
         }
+    }
+
+    private void bossAnimation()
+    {
+        anim.SetBool("BossMove", bossMove);
+        anim.SetBool("BossPattern1", pattern1);
     }
 
     private void checnkBossPattern()
     {
         if (isBoss == false) return;
         patternTimer += Time.deltaTime;
-        if(patternChange == true)
+        if (patternChange == true)
         {
             if(patternTimer >= 2.0f)
             {
@@ -78,45 +94,15 @@ public class Enemy : MonoBehaviour
         {
             case 1:
                 {
-                    if(patternTimer >= bossPattern1Reload)
+                    if(patternTimer >= pattern1Reload)
                     {
                         patternTimer = 0.0f;
-                        shootStraight();
-                        if (patternConunt >= bossPattern1Count)
+                        pattern1 = true;
+                        if(patternConunt >= pattern1Count)
                         {
-                            bossPattern++;
                             patternChange = true;
                             patternConunt = 0;
-                        }
-                    }
-                }
-                break;
-            case 2:
-                {
-                    if (patternTimer >= bossPattern2Reload)
-                    {
-                        patternTimer = 0.0f;
-                        airShotgun();
-                        if (patternConunt >= bossPattern2Count)
-                        {
-                            bossPattern++;
-                            patternChange = true;
-                            patternConunt = 0;
-                        }
-                    }
-                }
-                break;
-            case 3:
-                {
-                    if (patternTimer >= bossPattern3Reload)
-                    {
-                        patternTimer = 0.0f;
-                        airGatling();
-                        if (patternConunt >= bossPattern3Count)
-                        {
-                            bossPattern++;
-                            patternChange = true;
-                            patternConunt = 0;
+                            pattern1 = false;
                         }
                     }
                 }
@@ -124,32 +110,24 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
-    {
-        GameObject obj = Instantiate(_obj,_pos,Quaternion.Euler(_rot),trsLayer);
-        Bullet objSc = obj.GetComponent<Bullet>();
-        bool isRight = false;
-        if (transform.localScale.x == -1)
-        {
-            isRight = true;
-        }
-        objSc.SetDamege(false,1,isRight,_speed);
-    }
-    private void shootStraight()
-    {
-        creatBullet(pattern1Bullet, transform.position, Vector3.zero, 5);
-        creatBullet(pattern1Bullet, transform.position + new Vector3(0,1,0), Vector3.zero, 5);
-        creatBullet(pattern1Bullet, transform.position + new Vector3(0,2,0), Vector3.zero, 5);
-        patternConunt++;
-    }
-    private void airShotgun()
-    {
-
-    }
-    private void airGatling()
-    {
-
-    }
+    //private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
+    //{
+    //    GameObject obj = Instantiate(_obj,_pos,Quaternion.Euler(_rot),trsLayer);
+    //    Bullet objSc = obj.GetComponent<Bullet>();
+    //    bool isRight = false;
+    //    if (transform.localScale.x == -1)
+    //    {
+    //        isRight = true;
+    //    }
+    //    objSc.SetDamege(false,1,isRight,_speed);
+    //}
+    //private void shootStraight()
+    //{
+    //    creatBullet(pattern1Bullet, transform.position, Vector3.zero, 5);
+    //    creatBullet(pattern1Bullet, transform.position + new Vector3(0,1,0), Vector3.zero, 5);
+    //    creatBullet(pattern1Bullet, transform.position + new Vector3(0,2,0), Vector3.zero, 5);
+    //    patternConunt++;
+    //}
 
 
 
@@ -159,7 +137,8 @@ public class Enemy : MonoBehaviour
         {
             turn();
         }
-        if(trigger.IsTouchingLayers(layerEnemy)==true && isBoss == false)
+        
+        else if (trigger.IsTouchingLayers(layerEnemy)==true && isBoss == false)
         {
             turn();
         }
@@ -177,7 +156,7 @@ public class Enemy : MonoBehaviour
     public void Hit(float _damage, bool _bodySlam = false)
     {
         CurHp -= _damage;
-        if(CurHp <=0)
+        if(CurHp <=0 && isBoss == false)
         {
             Destroy(gameObject);
             Instantiate(objExplosion, transform.position, Quaternion.identity, trsLayer);
@@ -204,6 +183,7 @@ public class Enemy : MonoBehaviour
             sr.color = new Color(1f, 0f, 0f, 1f);
             Invoke("SetSpriteDefault", 0.1f);
         }
+        
     }
 
     private void SetSpriteDefault()
