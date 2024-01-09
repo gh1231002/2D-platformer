@@ -21,9 +21,9 @@ public class Enemy : MonoBehaviour
 
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
-    private bool pattern1 = false;
-    private float pattern1Reload =1f;
+    private float pattern1Reload = 1f;
     private int pattern1Count = 1;
+    private bool pattern1 = false;
 
     private bool bossMove = false;
     private float moveTime = 0.0f;
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
     {
         moving();
         bossAnimation();
-        checnkBossPattern();
+        //checnkBossPattern();
     }
 
     private void moving()
@@ -60,76 +60,72 @@ public class Enemy : MonoBehaviour
             bossMove = true;
             rigid.velocity = new Vector2(-moveSpeed, rigid.velocity.y);
             moveTime += Time.deltaTime;
-            if(moveTime >= 6.0f)
+            if(moveTime >= 5.0f)
             {
                 turn();
                 moveTime = 0.0f;
             }
-            bossMove = false;
-            
         }
     }
 
     private void bossAnimation()
     {
         anim.SetBool("BossMove", bossMove);
-        anim.SetBool("BossPattern1", pattern1);
+        anim.SetBool("Pattern1", pattern1);
     }
 
-    private void checnkBossPattern()
-    {
-        if (isBoss == false) return;
-        patternTimer += Time.deltaTime;
-        if (patternChange == true)
-        {
-            if(patternTimer >= 2.0f)
-            {
-                patternTimer = 0.0f;
-                patternChange = false;
-            }
-            return;
-        }
-        
-        switch(bossPattern)
-        {
-            case 1:
-                {
-                    if(patternTimer >= pattern1Reload)
-                    {
-                        patternTimer = 0.0f;
-                        pattern1 = true;
-                        if(patternConunt >= pattern1Count)
-                        {
-                            patternChange = true;
-                            patternConunt = 0;
-                            pattern1 = false;
-                        }
-                    }
-                }
-                break;
-        }
-    }
-
-    //private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
+    //private void checnkBossPattern()
     //{
-    //    GameObject obj = Instantiate(_obj,_pos,Quaternion.Euler(_rot),trsLayer);
-    //    Bullet objSc = obj.GetComponent<Bullet>();
-    //    bool isRight = false;
-    //    if (transform.localScale.x == -1)
+    //    if (isBoss == false) return;
+    //    patternTimer += Time.deltaTime;
+    //    if (patternChange == true)
     //    {
-    //        isRight = true;
+    //        if(patternTimer >= 2.0f)
+    //        {
+    //            patternTimer = 0.0f;
+    //            patternChange = false;
+    //        }
+    //        return;
     //    }
-    //    objSc.SetDamege(false,1,isRight,_speed);
+        
+    //    switch(bossPattern)
+    //    {
+    //        case 1:
+    //            {
+    //                if(patternTimer >= pattern1Reload)
+    //                {
+    //                    patternTimer = 0.0f;
+    //                    patternConunt++;
+    //                    pattern1 = true;
+    //                    if(patternConunt >= pattern1Count)
+    //                    {
+    //                        bossPattern++;
+    //                        patternChange = true;
+    //                        patternConunt = 0;
+    //                    }
+    //                    pattern1 = false;
+    //                }
+    //            }
+    //            break;
+    //        case 2:
+    //            {
+    //                if (patternTimer >= pattern2Reload)
+    //                {
+    //                    patternTimer = 0.0f;
+    //                    patternConunt++;
+    //                    pattern2 = true;
+    //                    if (patternConunt >= pattern2Count)
+    //                    {
+    //                        bossPattern = 1;
+    //                        patternChange = true;
+    //                        patternConunt = 0;
+    //                    }
+    //                    pattern2 = false;
+    //                }
+    //            }
+    //            break;
+    //    }
     //}
-    //private void shootStraight()
-    //{
-    //    creatBullet(pattern1Bullet, transform.position, Vector3.zero, 5);
-    //    creatBullet(pattern1Bullet, transform.position + new Vector3(0,1,0), Vector3.zero, 5);
-    //    creatBullet(pattern1Bullet, transform.position + new Vector3(0,2,0), Vector3.zero, 5);
-    //    patternConunt++;
-    //}
-
-
 
     private void FixedUpdate()
     {
@@ -141,6 +137,17 @@ public class Enemy : MonoBehaviour
         else if (trigger.IsTouchingLayers(layerEnemy)==true && isBoss == false)
         {
             turn();
+        }
+
+        else if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
+        {
+            bossMove = false;
+            pattern1 = true;
+        }
+        else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
+        {
+            bossMove = true;
+            pattern1 = false;
         }
     }
 
