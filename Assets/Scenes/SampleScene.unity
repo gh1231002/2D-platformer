@@ -1344,7 +1344,8 @@ GameObject:
   - component: {fileID: 457320163}
   - component: {fileID: 457320162}
   - component: {fileID: 457320161}
-  - component: {fileID: 457320166}
+  - component: {fileID: 457320167}
+  - component: {fileID: 457320168}
   m_Layer: 7
   m_Name: Boss
   m_TagString: Enemy
@@ -1403,7 +1404,7 @@ MonoBehaviour:
   MaxHp: 50
   trsLayer: {fileID: 0}
   isBoss: 1
-  bossPattern: 1
+  bossPattern: 0
 --- !u!95 &457320163
 Animator:
   serializedVersion: 5
@@ -1493,8 +1494,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &457320166
-PolygonCollider2D:
+--- !u!114 &457320167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457320160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca4d02293fa318240a6a48be9e1dfc52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!61 &457320168
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1525,7 +1538,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.20656967, y: 0.070809126}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1535,26 +1548,9 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 1.28, y: -0.96}
-      - {x: 1.1164334, y: -0.7309043}
-      - {x: 0.5233383, y: 0.103319645}
-      - {x: 0.88005066, y: 0.39999998}
-      - {x: 0.62914824, y: 0.68}
-      - {x: 0.2836679, y: 0.8836698}
-      - {x: -0.39999998, y: 1.16}
-      - {x: -0.59999996, y: 1.16}
-      - {x: -0.64, y: 1.04}
-      - {x: -0.022022694, y: 0.5963297}
-      - {x: -0.3129251, y: -0.27266037}
-      - {x: -0.76, y: -1}
-      - {x: -0.68, y: -1.04}
-      - {x: -0.48, y: -1.04}
-      - {x: 0.21451965, y: -0.18914872}
-      - {x: 0.9672345, y: -1.0181913}
-      - {x: 1.24, y: -1.04}
-  m_UseDelaunayMesh: 0
+  serializedVersion: 2
+  m_Size: {x: 1.3784103, y: 2.16089}
+  m_EdgeRadius: 0
 --- !u!1 &474610756
 GameObject:
   m_ObjectHideFlags: 0
@@ -20434,7 +20430,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.17308044, y: -0.050025463}
+  m_Offset: {x: 0.23799133, y: -0.050025463}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -20445,7 +20441,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6538391, y: 1.9805002}
+  m_Size: {x: 0.52401733, y: 1.9805002}
   m_EdgeRadius: 0
 --- !u!4 &1652893039
 Transform:

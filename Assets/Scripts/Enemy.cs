@@ -23,11 +23,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private bool isBoss;
     private float pattern1Reload = 1f;
     private int pattern1Count = 1;
-    private bool pattern1 = false;
+    private bool attack1 = false;
+    private bool attack2 = false;
+    private bool death = false;
 
     private bool bossMove = false;
     private float moveTime = 0.0f;
-    [SerializeField]private int bossPattern = 1; //현재패턴
+    [SerializeField]private int bossPattern = 0; //현재패턴
     private bool patternChange = false; //패턴을 바꿔야하는지
     private int patternConunt = 0; //몇번 패턴을 했는지
     private float patternTimer = 0.0f; //패턴 변경 시간
@@ -46,12 +48,15 @@ public class Enemy : MonoBehaviour
     {
         moving();
         bossAnimation();
-        //checnkBossPattern();
+        randomAttack();
     }
 
     private void moving()
     {
-        if(isBoss == false)
+        if (death == true) return;
+        if (attack1 == true) return;
+        if (attack2 == true) return;
+        if (isBoss == false)
         {
             rigid.velocity = new Vector2(moveSpeed, rigid.velocity.y);
         }
@@ -71,83 +76,55 @@ public class Enemy : MonoBehaviour
     private void bossAnimation()
     {
         anim.SetBool("BossMove", bossMove);
-        anim.SetBool("Pattern1", pattern1);
+        anim.SetBool("Attack1", attack1);
+        anim.SetBool("Attack2", attack2);
+        anim.SetBool("Death", death);
     }
 
-    //private void checnkBossPattern()
-    //{
-    //    if (isBoss == false) return;
-    //    patternTimer += Time.deltaTime;
-    //    if (patternChange == true)
-    //    {
-    //        if(patternTimer >= 2.0f)
-    //        {
-    //            patternTimer = 0.0f;
-    //            patternChange = false;
-    //        }
-    //        return;
-    //    }
+    private void randomAttack()
+    {
+        bossPattern = Random.Range(0, 2);
+        switch(bossPattern)
+        {
+            case 0:
+                {
+                    if(trigger.IsTouchingLayers(layer) == true && isBoss == true)
+                    {
+                        attack1 = true;
+                    }
+                    else if(trigger.IsTouchingLayers(layer) == false && isBoss == true)
+                    {
+                        attack1 = false;
+                    }
+                }
+                break;
+            case 1:
+                {
+                    if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
+                    {
+                        attack2 = true;
+                    }
+                    else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
+                    {
+                        attack2 = false;
+                    }
+                }
+                break;
+        }
         
-    //    switch(bossPattern)
-    //    {
-    //        case 1:
-    //            {
-    //                if(patternTimer >= pattern1Reload)
-    //                {
-    //                    patternTimer = 0.0f;
-    //                    patternConunt++;
-    //                    pattern1 = true;
-    //                    if(patternConunt >= pattern1Count)
-    //                    {
-    //                        bossPattern++;
-    //                        patternChange = true;
-    //                        patternConunt = 0;
-    //                    }
-    //                    pattern1 = false;
-    //                }
-    //            }
-    //            break;
-    //        case 2:
-    //            {
-    //                if (patternTimer >= pattern2Reload)
-    //                {
-    //                    patternTimer = 0.0f;
-    //                    patternConunt++;
-    //                    pattern2 = true;
-    //                    if (patternConunt >= pattern2Count)
-    //                    {
-    //                        bossPattern = 1;
-    //                        patternChange = true;
-    //                        patternConunt = 0;
-    //                    }
-    //                    pattern2 = false;
-    //                }
-    //            }
-    //            break;
-    //    }
-    //}
+    }
 
     private void FixedUpdate()
     {
-        if (trigger.IsTouchingLayers(layer)==false && isBoss == false)
+        if(death == true) return;
+        if (trigger.IsTouchingLayers(layer)== false && isBoss == false)
         {
             turn();
         }
         
-        else if (trigger.IsTouchingLayers(layerEnemy)==true && isBoss == false)
+        else if (trigger.IsTouchingLayers(layerEnemy)== true && isBoss == false)
         {
             turn();
-        }
-
-        else if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
-        {
-            bossMove = false;
-            pattern1 = true;
-        }
-        else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
-        {
-            bossMove = true;
-            pattern1 = false;
         }
     }
 
@@ -167,6 +144,10 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
             Instantiate(objExplosion, transform.position, Quaternion.identity, trsLayer);
+        }
+        else if (CurHp <=0 && isBoss == true)
+        {
+            death = true;
         }
         else if(_bodySlam == true && isBoss == false)
         {
