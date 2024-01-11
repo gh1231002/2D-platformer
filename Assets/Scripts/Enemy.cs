@@ -21,18 +21,19 @@ public class Enemy : MonoBehaviour
 
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
-    private float pattern1Reload = 1f;
-    private int pattern1Count = 1;
+    [SerializeField] private int pattern1Count = 8;
+    [SerializeField] private float pattern1Reload = 1f;
+    [SerializeField] GameObject obj2;
     private bool attack1 = false;
     private bool attack2 = false;
     private bool death = false;
 
     private bool bossMove = false;
     private float moveTime = 0.0f;
-    [SerializeField]private int bossPattern = 0; //현재패턴
-    private bool patternChange = false; //패턴을 바꿔야하는지
-    private int patternConunt = 0; //몇번 패턴을 했는지
-    private float patternTimer = 0.0f; //패턴 변경 시간
+    [SerializeField]private int bossPattern = 0;//현재패턴
+    private float shootTimer = 0.0f;
+    private int patternCount = 0;
+    private bool patternChange = false;
     
 
     private void Awake()
@@ -65,7 +66,7 @@ public class Enemy : MonoBehaviour
             bossMove = true;
             rigid.velocity = new Vector2(-moveSpeed, rigid.velocity.y);
             moveTime += Time.deltaTime;
-            if(moveTime >= 5.0f)
+            if(moveTime >= 3.0f)
             {
                 turn();
                 moveTime = 0.0f;
@@ -83,7 +84,17 @@ public class Enemy : MonoBehaviour
 
     private void randomAttack()
     {
-        bossPattern = Random.Range(0, 2);
+        bossPattern = Random.Range(0, 3);
+        shootTimer += Time.deltaTime;
+        if(patternChange == true)
+        {
+            if(shootTimer >= 3.0f)
+            {
+                shootTimer = 0.0f;
+                patternChange = false;
+            }
+            return;
+        }
         switch(bossPattern)
         {
             case 0:
@@ -91,6 +102,7 @@ public class Enemy : MonoBehaviour
                     if(trigger.IsTouchingLayers(layer) == true && isBoss == true)
                     {
                         attack1 = true;
+                        rigid.velocity = Vector2.zero;
                     }
                     else if(trigger.IsTouchingLayers(layer) == false && isBoss == true)
                     {
@@ -103,6 +115,7 @@ public class Enemy : MonoBehaviour
                     if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
                     {
                         attack2 = true;
+                        rigid.velocity = Vector2.zero;
                     }
                     else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
                     {
@@ -110,10 +123,38 @@ public class Enemy : MonoBehaviour
                     }
                 }
                 break;
+            case 2:
+                {
+                    if(shootTimer >= pattern1Reload)
+                    {
+                        shootTimer = 0.0f;
+                        posShoot();
+                        if(patternCount >= pattern1Count)
+                        {
+                            bossPattern = 0;
+                            patternChange = true;
+                        }
+                    }
+                }
+                break;
         }
         
     }
 
+    private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
+    {
+        GameObject obj = Instantiate(_obj, _pos, Quaternion.Euler(_rot), trsLayer);
+        Bullet objSc = obj.GetComponent<Bullet>();
+        objSc.SetDamege(false, 1, true, _speed);
+    }
+    private void posShoot()
+    {
+        GameObject objPlayer = GameObject.Find("Player");
+        Player player = objPlayer.GetComponent<Player>();
+        Vector3 playerPos = player.transform.position;
+        creatBullet(obj2, playerPos + new Vector3(0,5,0), new Vector3(0, 0, -90), 10);
+        patternCount++;
+    }
     private void FixedUpdate()
     {
         if(death == true) return;
@@ -147,6 +188,7 @@ public class Enemy : MonoBehaviour
         }
         else if (CurHp <=0 && isBoss == true)
         {
+            rigid.velocity = Vector2.zero;
             death = true;
         }
         else if(_bodySlam == true && isBoss == false)

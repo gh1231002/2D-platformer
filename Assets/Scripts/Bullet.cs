@@ -34,13 +34,13 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
             Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
         }
-        //else if(PlayerBullet == false && collision.gameObject.tag == "Player")
-        //{
-        //    Player playerSc = collision.gameObject.GetComponent<Player>();
-        //    playerSc.Hit(BulletDamage);
-        //    Destroy(gameObject);
-        //    Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
-        //}
+        else if (PlayerBullet == false && collision.gameObject.tag == "Player")
+        {
+            Player playerSc = collision.gameObject.GetComponent<Player>();
+            playerSc.Hit(BulletDamage);
+            Destroy(gameObject);
+            Instantiate(objHit, transform.position, Quaternion.identity, trsPos);
+        }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             Destroy(gameObject);
