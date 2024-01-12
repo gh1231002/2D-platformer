@@ -52,6 +52,8 @@ public class Player : MonoBehaviour
 
     [Header("ÇÁ¸®ÆÕ")]
     [SerializeField] GameObject objBullet;
+    private int Count = 0;
+    ItemUi itemUi;
     private void OnDrawGizmos()
     {
         if (boxCollider2D != null)
@@ -70,6 +72,17 @@ public class Player : MonoBehaviour
             Enemy obj = collision.gameObject.GetComponent<Enemy>();
             obj.Hit(1,true);
         }
+        else if (collision.gameObject.tag == "Item")
+        {
+            Destroy(collision.gameObject);
+            Count += 1;
+            itemUi.SetItemGet(Count);
+        }
+    }
+    public void SetItemGet(ItemUi _value)
+    {
+        itemUi = _value;
+        itemUi.SetItemGet(Count);
     }
 
     public void Hit(float _damage)

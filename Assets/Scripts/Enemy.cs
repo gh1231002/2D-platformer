@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     private float CurHp;
     Rigidbody2D rigid;
     private Animator anim;
+    private Item item;
 
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
@@ -34,6 +35,7 @@ public class Enemy : MonoBehaviour
     private float shootTimer = 0.0f;
     private int patternCount = 0;
     private bool patternChange = false;
+    private float timer = 0.0f; 
     
 
     private void Awake()
@@ -84,7 +86,12 @@ public class Enemy : MonoBehaviour
 
     private void randomAttack()
     {
-        bossPattern = Random.Range(0, 3);
+        timer += Time.deltaTime;
+        if(timer >= 5.0f)
+        {
+            bossPattern = Random.Range(0, 3);
+            timer = 0.0f;
+        }
         shootTimer += Time.deltaTime;
         if(patternChange == true)
         {
@@ -181,10 +188,11 @@ public class Enemy : MonoBehaviour
     public void Hit(float _damage, bool _bodySlam = false)
     {
         CurHp -= _damage;
-        if(CurHp <=0 && isBoss == false)
+        if(CurHp <=0 && isBoss == false && _bodySlam == false)
         {
             Destroy(gameObject);
             Instantiate(objExplosion, transform.position, Quaternion.identity, trsLayer);
+            item.CreatItem(transform.position);
         }
         else if (CurHp <=0 && isBoss == true)
         {
