@@ -10,7 +10,9 @@ public class Player : MonoBehaviour
     {
         WallCheck,
         HitCheck,
+        WakeEnemy,
     }
+    hitType _type;
     [Header("플레이어 데이터")]
     [SerializeField] private float MoveSpeed = 5;
     [SerializeField] private float gravity = 9.81f;
@@ -63,7 +65,7 @@ public class Player : MonoBehaviour
             Gizmos.DrawWireCube(pos, boxCollider2D.bounds.size);
         }
     }
-
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (dash == true) return;

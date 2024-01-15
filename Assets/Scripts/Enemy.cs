@@ -18,7 +18,6 @@ public class Enemy : MonoBehaviour
     private float CurHp;
     Rigidbody2D rigid;
     private Animator anim;
-    private Item item;
 
     [Header("보스패턴")]
     [SerializeField] private bool isBoss;
@@ -35,9 +34,19 @@ public class Enemy : MonoBehaviour
     private float shootTimer = 0.0f;
     private int patternCount = 0;
     private bool patternChange = false;
-    private float timer = 0.0f; 
-    
+    private float timer = 0.0f;
 
+
+    bool meetPlayer = false;
+    public bool GetisBoss()
+    {
+        return isBoss;
+    }
+
+    public void meetSomething(bool _something)
+    {
+        meetPlayer = _something;
+    }
     private void Awake()
     {
         CurHp = MaxHp;
@@ -68,7 +77,7 @@ public class Enemy : MonoBehaviour
             bossMove = true;
             rigid.velocity = new Vector2(-moveSpeed, rigid.velocity.y);
             moveTime += Time.deltaTime;
-            if(moveTime >= 3.0f)
+            if(moveTime >= 5.0f)
             {
                 turn();
                 moveTime = 0.0f;
@@ -83,6 +92,12 @@ public class Enemy : MonoBehaviour
         anim.SetBool("Attack2", attack2);
         anim.SetBool("Death", death);
     }
+
+
+    //private void OnBecameVisible()
+    //{
+    //    meetPlayer = true;
+    //}
 
     private void randomAttack()
     {
@@ -102,50 +117,52 @@ public class Enemy : MonoBehaviour
             }
             return;
         }
-        switch(bossPattern)
+        if (meetPlayer == true)
         {
-            case 0:
-                {
-                    if(trigger.IsTouchingLayers(layer) == true && isBoss == true)
+            switch (bossPattern)
+            {
+                case 0:
                     {
-                        attack1 = true;
-                        rigid.velocity = Vector2.zero;
-                    }
-                    else if(trigger.IsTouchingLayers(layer) == false && isBoss == true)
-                    {
-                        attack1 = false;
-                    }
-                }
-                break;
-            case 1:
-                {
-                    if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
-                    {
-                        attack2 = true;
-                        rigid.velocity = Vector2.zero;
-                    }
-                    else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
-                    {
-                        attack2 = false;
-                    }
-                }
-                break;
-            case 2:
-                {
-                    if(shootTimer >= pattern1Reload)
-                    {
-                        shootTimer = 0.0f;
-                        posShoot();
-                        if(patternCount >= pattern1Count)
+                        if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
                         {
-                            bossPattern = 0;
-                            patternChange = true;
+                            attack1 = true;
+                            rigid.velocity = Vector2.zero;
+                        }
+                        else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
+                        {
+                            attack1 = false;
                         }
                     }
-                }
-                break;
+                    break;
+                case 1:
+                    {
+                        if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
+                        {
+                            attack2 = true;
+                            rigid.velocity = Vector2.zero;
+                        }
+                        else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
+                        {
+                            attack2 = false;
+                        }
+                    }
+                    break;
+                case 2:
+                    {
+                        if (shootTimer >= pattern1Reload)
+                        {
+                            shootTimer = 0.0f;
+                            posShoot();
+                            if (patternCount >= pattern1Count)
+                            {
+                                bossPattern = 0;
+                                patternChange = true;
+                            }
+                        }
+                    }
+                    break;
+            }
         }
-        
     }
 
     private void creatBullet(GameObject _obj, Vector3 _pos, Vector3 _rot, float _speed)
@@ -192,6 +209,8 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
             Instantiate(objExplosion, transform.position, Quaternion.identity, trsLayer);
+            GameObject obj = GameObject.Find("GameManager");
+            Item item = obj.GetComponent<Item>();
             item.CreatItem(transform.position);
         }
         else if (CurHp <=0 && isBoss == true)

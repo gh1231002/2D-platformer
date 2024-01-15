@@ -13,8 +13,18 @@ public class HitBox : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
-        player.TriggerEnter(hitType, collision);
+        if(hitType == Player.hitType.WakeEnemy && collision.tag == "Enemy")
+        {
+            Enemy enemySc = collision.GetComponent<Enemy>();
+            if(enemySc.GetisBoss() == true)
+            {
+                enemySc.meetSomething(true);
+            }
+        }
+        else
+        {
+            player.TriggerEnter(hitType, collision);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
