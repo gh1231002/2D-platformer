@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
         HitCheck,
         WakeEnemy,
     }
-    hitType _type;
     [Header("플레이어 데이터")]
     [SerializeField] private float MoveSpeed = 5;
     [SerializeField] private float gravity = 9.81f;
@@ -28,7 +27,7 @@ public class Player : MonoBehaviour
     private Animator anim;
     Rigidbody2D rigid;
     Vector3 moveDir;
-    [SerializeField]private bool isGround = false;
+    [SerializeField] private bool isGround = false;
     private float verticalVelocity;
     private bool isJump = false;
     PlayerHp playerHp;
@@ -65,22 +64,22 @@ public class Player : MonoBehaviour
             Gizmos.DrawWireCube(pos, boxCollider2D.bounds.size);
         }
     }
-    
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (dash == true) return;
-        if(collision.gameObject.tag == "Enemy")
-        {
-            Enemy obj = collision.gameObject.GetComponent<Enemy>();
-            obj.Hit(1,true);
-        }
-        else if (collision.gameObject.tag == "Item")
-        {
-            Destroy(collision.gameObject);
-            Count += 1;
-            itemUi.SetItemGet(Count);
-        }
-    }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (dash == true) return;
+    //    if(collision.gameObject.tag == "Enemy")
+    //    {
+    //        Enemy obj = collision.gameObject.GetComponent<Enemy>();
+    //        obj.Hit(1,true);
+    //    }
+    //    else if (collision.gameObject.tag == "Item")
+    //    {
+    //        Destroy(collision.gameObject);
+    //        Count += 1;
+    //        itemUi.SetItemGet(Count);
+    //    }
+    //}
     public void SetItemGet(ItemUi _value)
     {
         itemUi = _value;
@@ -146,13 +145,13 @@ public class Player : MonoBehaviour
 
     private void turning()
     {
-        if(moveDir.x < 0 && transform.localScale.x != -1)
+        if (moveDir.x < 0 && transform.localScale.x != -1)
         {
             Vector3 scale = transform.localScale;
             scale.x = -1;
             transform.localScale = scale;
         }
-        else if(moveDir.x > 0 && transform.localScale.x != 1)
+        else if (moveDir.x > 0 && transform.localScale.x != 1)
         {
             Vector3 scale = transform.localScale;
             scale.x = 1;
@@ -165,7 +164,7 @@ public class Player : MonoBehaviour
         isGround = false;
         if (verticalVelocity > 0)
         {
-          return;
+            return;
         }
         RaycastHit2D hit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, 0.1f, LayerMask.GetMask("Ground"));
         if (hit.transform != null && hit.transform.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -177,7 +176,7 @@ public class Player : MonoBehaviour
     private void Jumping()
     {
         if (dash == true) return;
-       if(isGround == false)
+        if (isGround == false)
         {
             if (Input.GetKeyDown(KeyCode.Space) && wallStep == true && moveDir.x != 0)
             {
@@ -193,7 +192,7 @@ public class Player : MonoBehaviour
 
     private void checkGravity()
     {
-        if(dash == true) return;
+        if (dash == true) return;
         if (doWallStep == true)
         {
             Vector2 dir = rigid.velocity;
@@ -206,7 +205,7 @@ public class Player : MonoBehaviour
         if (isGround == false)
         {
             verticalVelocity -= gravity * Time.deltaTime;
-            if(verticalVelocity < -10.0f)
+            if (verticalVelocity < -10.0f)
             {
                 verticalVelocity = -10f;
             }
@@ -216,7 +215,7 @@ public class Player : MonoBehaviour
             verticalVelocity = 0f;
         }
 
-        if(isJump == true)
+        if (isJump == true)
         {
             isJump = false;
             verticalVelocity = JumpForce;
@@ -226,10 +225,10 @@ public class Player : MonoBehaviour
 
     private void checkDoStepWallTimer()
     {
-        if(doWallStepTimer == true)
+        if (doWallStepTimer == true)
         {
             wallStepTimer += Time.deltaTime;
-            if(wallStepTimer >= wallStepTime)
+            if (wallStepTimer >= wallStepTime)
             {
                 wallStepTimer = 0.0f;
                 doWallStepTimer = false;
@@ -244,22 +243,22 @@ public class Player : MonoBehaviour
         {
             dash = true;
             verticalVelocity = 0f;
-            if(transform.localScale.x == 1)
+            if (transform.localScale.x == 1)
             {
                 rigid.velocity = new Vector2(10.0f, 0f);
                 dashEffect.enabled = true;
             }
-            else if(transform.localScale.x == -1)
+            else if (transform.localScale.x == -1)
             {
                 rigid.velocity = new Vector2(-10.0f, 0f);
                 dashEffect.enabled = true;
             }
             gameObject.layer = LayerMask.NameToLayer("Dash");
         }
-        else if(dash == true)
+        else if (dash == true)
         {
             dashTime += Time.deltaTime;
-            if(dashTime >= dashTimer)
+            if (dashTime >= dashTimer)
             {
                 dashTime = 0.0f;
                 dashEffect.enabled = false;
@@ -272,7 +271,7 @@ public class Player : MonoBehaviour
 
     private void checkShoot()
     {
-        if(Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             shootBullet();
         }
@@ -280,7 +279,7 @@ public class Player : MonoBehaviour
 
     private void shootBullet()
     {
-        createBullet(trsShootpos.position,Vector3.zero);
+        createBullet(trsShootpos.position, Vector3.zero);
     }
 
     private void createBullet(Vector3 _pos, Vector3 _rot)
@@ -302,9 +301,24 @@ public class Player : MonoBehaviour
     }
     public void TriggerEnter(hitType _Type, Collider2D _collision)
     {
-        if(_Type == hitType.WallCheck && _collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (_Type == hitType.WallCheck && _collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             wallStep = true;
+        }
+        else if (_Type == hitType.HitCheck)//triggerenter 함수로 하게될경우 히트박스 스크립트에서 물체를 확인해서 값을 가져오는게 아닌 플레이어 본인이 체크하게 되기 때문에 생각한대로 기능이 작동하지 않는다.
+        {
+            if (_collision.gameObject.tag == "Enemy")//맞닿은 태그가 적일경우
+            {
+                if (dash == true) return;
+                Enemy obj = _collision.gameObject.GetComponent<Enemy>();
+                obj.Hit(1, true);
+            }
+            else if (_collision.gameObject.tag == "Item")//맞닿은 태그가 아이템일 경우
+            {
+                Destroy(_collision.gameObject);
+                Count += 1;
+                itemUi.SetItemGet(Count);
+            }
         }
     }
 

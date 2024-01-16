@@ -125,11 +125,13 @@ public class Enemy : MonoBehaviour
                     {
                         if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
                         {
+                            bossMove = false;
                             attack1 = true;
                             rigid.velocity = Vector2.zero;
                         }
                         else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
                         {
+                            bossMove = true;
                             attack1 = false;
                         }
                     }
@@ -138,11 +140,13 @@ public class Enemy : MonoBehaviour
                     {
                         if (trigger.IsTouchingLayers(layer) == true && isBoss == true)
                         {
+                            bossMove = false;
                             attack2 = true;
                             rigid.velocity = Vector2.zero;
                         }
                         else if (trigger.IsTouchingLayers(layer) == false && isBoss == true)
                         {
+                            bossMove = true;
                             attack2 = false;
                         }
                     }
@@ -176,7 +180,7 @@ public class Enemy : MonoBehaviour
         GameObject objPlayer = GameObject.Find("Player");
         Player player = objPlayer.GetComponent<Player>();
         Vector3 playerPos = player.transform.position;
-        creatBullet(obj2, playerPos + new Vector3(0,5,0), new Vector3(0, 0, -90), 10);
+        creatBullet(obj2, playerPos + new Vector3(0,5,0), new Vector3(0, 0, -90), 8);
         patternCount++;
     }
     private void FixedUpdate()
@@ -204,7 +208,10 @@ public class Enemy : MonoBehaviour
 
     public void Hit(float _damage, bool _bodySlam = false)
     {
-        CurHp -= _damage;
+        if (isBoss == false)
+        {  
+            CurHp -= _damage;
+        }
         if(CurHp <=0 && isBoss == false && _bodySlam == false)
         {
             Destroy(gameObject);
@@ -216,6 +223,7 @@ public class Enemy : MonoBehaviour
         else if (CurHp <=0 && isBoss == true)
         {
             rigid.velocity = Vector2.zero;
+            bossMove = false;
             death = true;
         }
         else if(_bodySlam == true && isBoss == false)
