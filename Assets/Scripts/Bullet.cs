@@ -57,7 +57,7 @@ public class Bullet : MonoBehaviour
         transform.position += transform.right * diretion * Time.deltaTime * BulletSpeed;
     }
 
-    public void SetDamege(bool _isPlayer, float _damege, bool _isRight, float _speed = -1)
+    public void SetDamege(bool _isPlayer, float _damege, bool _isRight, int _bulletlevel ,float _speed = -1)
     {
         PlayerBullet = _isPlayer;
         BulletDamage = _damege;
@@ -66,17 +66,17 @@ public class Bullet : MonoBehaviour
             BulletSpeed = _speed;
         }
         isRight = _isRight;
-        if (isRight == false && PlayerBullet == true)
+        if (isRight == false && PlayerBullet == true && _bulletlevel == 1)
         {
             Vector3 scale = transform.localScale;
             scale.x = -1;
             transform.localScale = scale;
         }
-        //else if (isRight == false && PlayerBullet == false)
-        //{
-        //    Vector3 scale = transform.localScale;
-        //    scale.x = 1;
-        //    transform.localScale = scale;
-        //}
+        else if (_bulletlevel == 2 && isRight == false && PlayerBullet == true)
+        {
+            Vector3 scale = transform.localScale;
+            scale.x = 1;
+            transform.localScale = scale;
+        }
     }
 }

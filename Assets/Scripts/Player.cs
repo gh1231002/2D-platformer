@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
     private bool isJump = false;
     PlayerHp playerHp;
 
+    Gamemanager gamemanager;
+
     [Header("벽점프")]
     private bool wallStep = false;
     private bool doWallStep = false;
@@ -50,9 +52,11 @@ public class Player : MonoBehaviour
     private float timer = 0.01f;
     [SerializeField] private float BulletDamage = 0.0f;
     [SerializeField, Range(0.1f, 1.0f)] private float TimeShoot = 0.5f;
+    [SerializeField,Range(1f,3f)] private int BulletLevel = 1;
 
     [Header("프리팹")]
-    [SerializeField] GameObject objBullet;
+    [SerializeField] GameObject objBullet1;
+    [SerializeField] GameObject objBullet2;
     private int Count = 0;
     ItemUi itemUi;
     private void OnDrawGizmos()
@@ -113,11 +117,13 @@ public class Player : MonoBehaviour
     void Start()
     {
         maincam = Camera.main;
+        gamemanager = Gamemanager.instance;
     }
 
     // Update is called once per frame
     void Update()
     {
+        returnPlayerStat();
         moving();
         doAnimation();
         turning();
@@ -127,6 +133,11 @@ public class Player : MonoBehaviour
         checkDoStepWallTimer();
         checkDash();
         checkShoot();
+    }
+
+    private void returnPlayerStat()
+    {
+        gamemanager.checkPlayerStat(PlayerMaxHp, PlayerCurHp, BulletDamage);
     }
 
     private void moving()
@@ -284,14 +295,28 @@ public class Player : MonoBehaviour
 
     private void createBullet(Vector3 _pos, Vector3 _rot)
     {
-        GameObject obj = Instantiate(objBullet, _pos, Quaternion.Euler(_rot), layerDynamic);
-        Bullet objsc = obj.GetComponent<Bullet>();
         bool isRight = true;
         if (transform.localScale.x == -1)
         {
             isRight = false;
         }
-        objsc.SetDamege(true, BulletDamage, isRight);
+        switch (BulletLevel)
+        {
+            case 1:
+                {
+                    GameObject obj = Instantiate(objBullet1, _pos, Quaternion.Euler(_rot), layerDynamic);
+                    Bullet objsc = obj.GetComponent<Bullet>();
+                    objsc.SetDamege(true, BulletDamage,isRight,1);
+                }
+                break;
+            case 2:
+                {
+                    GameObject obj = Instantiate(objBullet2, _pos, Quaternion.Euler(_rot), layerDynamic);
+                    Bullet objsc = obj.GetComponent<Bullet>();
+                    objsc.SetDamege(true,BulletDamage+1,isRight,2);
+                }
+                break;
+        }
     }
 
     public void SetPlayerHp(PlayerHp _value)

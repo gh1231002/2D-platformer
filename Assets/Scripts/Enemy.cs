@@ -173,7 +173,7 @@ public class Enemy : MonoBehaviour
     {
         GameObject obj = Instantiate(_obj, _pos, Quaternion.Euler(_rot), trsLayer);
         Bullet objSc = obj.GetComponent<Bullet>();
-        objSc.SetDamege(false, 1, true, _speed);
+        objSc.SetDamege(false, 1, true, 0,_speed);
     }
     private void posShoot()
     {
