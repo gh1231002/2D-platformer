@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Gamemanager : MonoBehaviour
@@ -14,6 +15,10 @@ public class Gamemanager : MonoBehaviour
     [SerializeField] Button shoppanelexit;
     [SerializeField] TMP_Text hptext;
     [SerializeField] TMP_Text damagetext;
+    [Header("게임오버")]
+    [SerializeField] Button btnMainMenu;
+    [SerializeField] GameObject gameOver;
+    Player player;
     private void Awake()
     {
         if(instance == null)
@@ -30,12 +35,16 @@ public class Gamemanager : MonoBehaviour
         maincam = Camera.main;
         shoppanel.SetActive(false);
         openShop();
+        GameObject obj = GameObject.Find("Player");
+        player = obj.GetComponent<Player>();
+        gameOver.SetActive(false);
+        GameOver();
     }
     void Update()
     {
         
     }
-
+    
     private void openShop()
     {
         shop.onClick.AddListener(() =>
@@ -50,9 +59,21 @@ public class Gamemanager : MonoBehaviour
         });
     }
 
+    private void GameOver()
+    {
+        if(player.PlayerDeath() == true)
+        {
+            gameOver.SetActive(true);
+            btnMainMenu.onClick.AddListener(() =>
+            {
+                SceneManager.LoadSceneAsync(0);
+            });
+        }
+    }
+
     public void checkPlayerStat(float _maxHp, float _curHp, float _damage)
     {
         hptext.text = $"최대체력 = {_maxHp.ToString()} \n 현재체력 = {_curHp.ToString()}";
-        damagetext.text = $"현재 공격력 = {_damage.ToString()}";
+        damagetext.text = $"공격 Level = {_damage.ToString()}";
     }
 }

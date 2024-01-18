@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     [SerializeField] GameObject objHit;
     private Transform trsPos;
     private bool PlayerBullet = false;
-    private float BulletDamage = 1.0f;
+    private float BulletDamage = 1;
     private bool isRight;
 
     private void OnBecameInvisible()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class Player : MonoBehaviour
     [SerializeField] private Sprite sprHurt;
     [SerializeField] private float PlayerMaxHp = 3;
     [SerializeField] private float PlayerCurHp;
+    [SerializeField] Button BtnHpUp;
+    [SerializeField] Button BtnHpDown;
+    [SerializeField] Button BtnDamageUp;
+    [SerializeField] Button BtnDamageDown;
+    [SerializeField] bool playerDeath = false;
     private SpriteRenderer sr;
     private Sprite sprDefault;
     BoxCollider2D boxCollider2D;
@@ -50,9 +56,9 @@ public class Player : MonoBehaviour
     [Header("ÃÑ¾Ë¼¼ÆÃ")]
     private Transform trsShootpos;
     private float timer = 0.01f;
-    [SerializeField] private float BulletDamage = 0.0f;
+    [SerializeField] private float BulletDamage = 0;
     [SerializeField, Range(0.1f, 1.0f)] private float TimeShoot = 0.5f;
-    [SerializeField,Range(1f,3f)] private int BulletLevel = 1;
+    [SerializeField, Range(1f, 3f)] private int BulletLevel = 1;
 
     [Header("ÇÁ¸®ÆÕ")]
     [SerializeField] GameObject objBullet1;
@@ -96,11 +102,16 @@ public class Player : MonoBehaviour
         playerHp.SetPlayerHp(PlayerCurHp);
         if (PlayerCurHp == 0)
         {
+            playerDeath = true;
             Destroy(gameObject);
             dashEffect.enabled = false;
         }
     }
-
+    
+    public bool PlayerDeath()
+    {
+        return playerDeath;
+    }
 
     private void Awake()
     {
@@ -113,6 +124,7 @@ public class Player : MonoBehaviour
         trsShootpos = transform.Find("ShotPos");
         dashEffect.enabled = false;
         PlayerCurHp = PlayerMaxHp;
+        transform.position = new Vector3(-25,3,0);
     }
     void Start()
     {
@@ -120,7 +132,6 @@ public class Player : MonoBehaviour
         gamemanager = Gamemanager.instance;
     }
 
-    // Update is called once per frame
     void Update()
     {
         returnPlayerStat();
@@ -137,7 +148,54 @@ public class Player : MonoBehaviour
 
     private void returnPlayerStat()
     {
-        gamemanager.checkPlayerStat(PlayerMaxHp, PlayerCurHp, BulletDamage);
+        btnCheck();
+        gamemanager.checkPlayerStat(PlayerMaxHp, PlayerCurHp, BulletLevel);
+    }
+
+    private void btnCheck()
+    {
+        BtnHpUp.onClick.AddListener(() =>
+        {
+            Count -= 1;
+            PlayerMaxHp++;
+            PlayerCurHp = PlayerMaxHp;
+            if (PlayerMaxHp >= 10)
+            {
+                PlayerMaxHp = 10;
+                PlayerCurHp = PlayerMaxHp;
+            }
+        });
+        BtnHpDown.onClick.AddListener(() =>
+        {
+            Count += 1;
+            PlayerMaxHp--;
+            PlayerCurHp = PlayerMaxHp;
+            if (PlayerMaxHp <= 3)
+            {
+                PlayerMaxHp = 3;
+                PlayerCurHp = PlayerMaxHp;
+            }
+        });
+        BtnDamageUp.onClick.AddListener(() =>
+        {
+            Count -= 1;
+            BulletLevel += 1;
+            if (BulletLevel >= 2)
+            {
+                BulletLevel = 2;
+            }
+        });
+        BtnDamageDown.onClick.AddListener(() =>
+        {
+            Count += 1;
+            BulletLevel -= 1;
+            if (BulletLevel <= 1)
+            {
+                BulletLevel = 1;
+            }
+        });
+        playerHp.SetPlayerHp(PlayerCurHp);
+
     }
 
     private void moving()
@@ -311,9 +369,10 @@ public class Player : MonoBehaviour
                 break;
             case 2:
                 {
+                    BulletDamage = 2;
                     GameObject obj = Instantiate(objBullet2, _pos, Quaternion.Euler(_rot), layerDynamic);
                     Bullet objsc = obj.GetComponent<Bullet>();
-                    objsc.SetDamege(true,BulletDamage+1,isRight,2);
+                    objsc.SetDamege(true,BulletDamage,isRight,2);
                 }
                 break;
         }
