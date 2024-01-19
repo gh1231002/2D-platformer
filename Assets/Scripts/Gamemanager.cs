@@ -35,10 +35,9 @@ public class Gamemanager : MonoBehaviour
         maincam = Camera.main;
         shoppanel.SetActive(false);
         openShop();
+        gameOver.SetActive(false);
         GameObject obj = GameObject.Find("Player");
         player = obj.GetComponent<Player>();
-        gameOver.SetActive(false);
-        GameOver();
     }
     void Update()
     {
@@ -59,16 +58,13 @@ public class Gamemanager : MonoBehaviour
         });
     }
 
-    private void GameOver()
+    public void GameOver()
     {
-        if(player.PlayerDeath() == true)
-        {
             gameOver.SetActive(true);
             btnMainMenu.onClick.AddListener(() =>
             {
                 SceneManager.LoadSceneAsync(0);
             });
-        }
     }
 
     public void checkPlayerStat(float _maxHp, float _curHp, float _damage)

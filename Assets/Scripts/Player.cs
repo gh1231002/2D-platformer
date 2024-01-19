@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.ReorderableList;
+using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,6 @@ public class Player : MonoBehaviour
     [SerializeField] Button BtnHpDown;
     [SerializeField] Button BtnDamageUp;
     [SerializeField] Button BtnDamageDown;
-    [SerializeField] bool playerDeath = false;
     private SpriteRenderer sr;
     private Sprite sprDefault;
     BoxCollider2D boxCollider2D;
@@ -102,17 +102,12 @@ public class Player : MonoBehaviour
         playerHp.SetPlayerHp(PlayerCurHp);
         if (PlayerCurHp == 0)
         {
-            playerDeath = true;
             Destroy(gameObject);
             dashEffect.enabled = false;
+            gamemanager.GameOver();
         }
     }
     
-    public bool PlayerDeath()
-    {
-        return playerDeath;
-    }
-
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -130,6 +125,7 @@ public class Player : MonoBehaviour
     {
         maincam = Camera.main;
         gamemanager = Gamemanager.instance;
+        btnCheck();
     }
 
     void Update()
@@ -148,12 +144,13 @@ public class Player : MonoBehaviour
 
     private void returnPlayerStat()
     {
-        btnCheck();
         gamemanager.checkPlayerStat(PlayerMaxHp, PlayerCurHp, BulletLevel);
+        playerHp.SetPlayerHp(PlayerCurHp);
     }
 
     private void btnCheck()
     {
+        if (Count == 0) return;
         BtnHpUp.onClick.AddListener(() =>
         {
             Count -= 1;
