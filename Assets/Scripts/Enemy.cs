@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     private int patternCount = 0;
     private bool patternChange = false;
     private float timer = 0.0f;
-
+    Gamemanager gamemanager;
 
     bool meetPlayer = false;
     public bool GetisBoss()
@@ -55,7 +55,12 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         sprdefault = sr.sprite;
     }
-    
+
+    private void Start()
+    {
+        gamemanager = Gamemanager.instance;
+    }
+
     void Update()
     {
         moving();
@@ -180,7 +185,7 @@ public class Enemy : MonoBehaviour
         GameObject objPlayer = GameObject.Find("Player");
         Player player = objPlayer.GetComponent<Player>();
         Vector3 playerPos = player.transform.position;
-        creatBullet(obj2, playerPos + new Vector3(0,5,0), new Vector3(0, 0, -90), 8);
+        creatBullet(obj2, playerPos + new Vector3(0,5,0), new Vector3(0, 0, -90), 10);
         patternCount++;
     }
     private void FixedUpdate()
@@ -208,7 +213,7 @@ public class Enemy : MonoBehaviour
 
     public void Hit(float _damage, bool _bodySlam = false)
     {
-        if (isBoss == false)
+        if (isBoss == false || isBoss == true)
         {  
             CurHp -= _damage;
         }
@@ -220,11 +225,12 @@ public class Enemy : MonoBehaviour
             Item item = obj.GetComponent<Item>();
             item.CreatItem(transform.position);
         }
-        else if (CurHp <=0 && isBoss == true)
+       else if (CurHp <=0 && isBoss == true)
         {
             rigid.velocity = Vector2.zero;
             bossMove = false;
             death = true;
+            bossDeath();
         }
         else if(_bodySlam == true && isBoss == false)
         {
@@ -249,6 +255,16 @@ public class Enemy : MonoBehaviour
             Invoke("SetSpriteDefault", 0.1f);
         }
         
+    }
+
+    private void bossDeath()
+    {
+        float time = 0.0f;
+        time = Time.deltaTime;
+        if(time >= 2.0f)
+        {
+            gamemanager.GameClear();
+        }
     }
 
     private void SetSpriteDefault()

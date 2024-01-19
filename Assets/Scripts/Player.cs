@@ -150,10 +150,12 @@ public class Player : MonoBehaviour
 
     private void btnCheck()
     {
-        if (Count == 0) return;
         BtnHpUp.onClick.AddListener(() =>
         {
+            if (Count == 0) return;
+            if (PlayerMaxHp == 10) return;
             Count -= 1;
+            itemUi.SetItemGet(Count);
             PlayerMaxHp++;
             PlayerCurHp = PlayerMaxHp;
             if (PlayerMaxHp >= 10)
@@ -164,7 +166,10 @@ public class Player : MonoBehaviour
         });
         BtnHpDown.onClick.AddListener(() =>
         {
+            if (Count == 0) return;
+            if (PlayerMaxHp == 3) return;
             Count += 1;
+            itemUi.SetItemGet(Count);
             PlayerMaxHp--;
             PlayerCurHp = PlayerMaxHp;
             if (PlayerMaxHp <= 3)
@@ -175,7 +180,10 @@ public class Player : MonoBehaviour
         });
         BtnDamageUp.onClick.AddListener(() =>
         {
+            if (Count == 0) return;
+            if (BulletLevel == 2) return;
             Count -= 1;
+            itemUi.SetItemGet(Count);
             BulletLevel += 1;
             if (BulletLevel >= 2)
             {
@@ -184,7 +192,10 @@ public class Player : MonoBehaviour
         });
         BtnDamageDown.onClick.AddListener(() =>
         {
+            if (Count == 0) return;
+            if (BulletLevel == 1) return;
             Count += 1;
+            itemUi.SetItemGet(Count);
             BulletLevel -= 1;
             if (BulletLevel <= 1)
             {
@@ -192,7 +203,6 @@ public class Player : MonoBehaviour
             }
         });
         playerHp.SetPlayerHp(PlayerCurHp);
-
     }
 
     private void moving()
