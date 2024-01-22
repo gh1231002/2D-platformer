@@ -259,12 +259,7 @@ public class Enemy : MonoBehaviour
 
     private void bossDeath()
     {
-        float time = 0.0f;
-        time = Time.deltaTime;
-        if(time >= 2.0f)
-        {
-            gamemanager.GameClear();
-        }
+        gamemanager.GameClear();
     }
 
     private void SetSpriteDefault()
