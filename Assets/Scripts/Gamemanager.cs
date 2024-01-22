@@ -15,6 +15,8 @@ public class Gamemanager : MonoBehaviour
     [SerializeField] Button shoppanelexit;
     [SerializeField] TMP_Text hptext;
     [SerializeField] TMP_Text damagetext;
+    [SerializeField] Button Key;
+    [SerializeField] TMP_Text keyguide;
     [Header("게임오버")]
     [SerializeField] Button btnMainMenu;
     [SerializeField] GameObject gameOver;
