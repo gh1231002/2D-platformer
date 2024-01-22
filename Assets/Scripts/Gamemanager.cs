@@ -16,7 +16,9 @@ public class Gamemanager : MonoBehaviour
     [SerializeField] TMP_Text hptext;
     [SerializeField] TMP_Text damagetext;
     [SerializeField] Button Key;
-    [SerializeField] TMP_Text keyguide;
+    [SerializeField] Button KeyExit;
+    [SerializeField] GameObject KeyGuide;
+    [SerializeField] TMP_Text keyText;
     [Header("게임오버")]
     [SerializeField] Button btnMainMenu;
     [SerializeField] GameObject gameOver;
@@ -42,8 +44,10 @@ public class Gamemanager : MonoBehaviour
         openShop();
         gameOver.SetActive(false);
         gameClear.SetActive(false);
+        KeyGuide.SetActive(false);
         GameObject obj = GameObject.Find("Player");
         player = obj.GetComponent<Player>();
+        helpGuide();
     }
 
     private void openShop()
@@ -58,6 +62,21 @@ public class Gamemanager : MonoBehaviour
             shoppanel.SetActive(false);
             Time.timeScale = 1.0f;
         });
+    }
+
+    private void helpGuide()
+    {
+        Key.onClick.AddListener(() =>
+        {
+            KeyGuide.SetActive(true);
+            Time.timeScale = 0.0f;
+        });
+        KeyExit.onClick.AddListener(() =>
+        {
+            KeyGuide.SetActive(false);
+            Time.timeScale = 1.0f;
+        });
+        keyText.text = "점프 : space \n 공격 : LeftCtrl \n 움직임 : A or D 또는 왼쪽 화살표 or 오른쪽 화살표";
     }
 
     public void GameOver()
